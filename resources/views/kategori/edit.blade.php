@@ -9,7 +9,10 @@
 
     <div class="mb-3">
         <label>Nama Kategori</label>
-        <input type="text" name="nama" class="form-control" value="{{ $data->nama }}">
+        <input type="text" name="nama" class="form-control" value="{{ old('nama', $data->nama) }}">
+        @error('nama')
+            <small class="text-danger">{{ $message }}</small>
+        @enderror
     </div>
 
     <button class="btn btn-warning">Update</button>

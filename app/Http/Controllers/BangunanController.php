@@ -8,82 +8,68 @@ use Illuminate\Http\Request;
 
 class BangunanController extends Controller
 {
-    /**
-     * Tampilkan semua data bangunan.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        $bangunan = Bangunan::with('tanah')->get();
-        return view('bangunan.index', compact('bangunan'));
+        $tanahs = Tanah::all();
+
+        $query = Bangunan::with('tanah');
+
+        if ($request->tanah_id) {
+            $query->where('tanah_id', $request->tanah_id);
+        }
+
+        $bangunans = $query->get();
+
+        return view('bangunan.index', compact('bangunans', 'tanahs'));
     }
 
-    /**
-     * Form tambah bangunan.
-     */
-    public function create()
-    {
-        $tanah = Tanah::all(); // ambil semua tanah
-        return view('bangunan.create', compact('tanah'));
+   public function create()
+{
+    $tanahs = Tanah::all(); // Mengambil semua tanah dari database
+    return view('bangunan.create', compact('tanahs'));
+}
+
+
+   public function store(Request $request)
+{
+    $request->validate([
+        'nama_bangunan' => 'required',
+        'kode_bangunan' => 'required',
+        'tanah_id'      => 'required|exists:tanahs,id',
+    ]);
+
+    Bangunan::create($request->all());
+}
+
+        return redirect()->route('bangunan.index')
+            ->with('success', 'Bangunan berhasil ditambahkan');
     }
 
-    /**
-     * Simpan data bangunan baru.
-     */
-    public function store(Request $request)
+    public function edit(Bangunan $bangunan)
+    {
+        $tanahs = Tanah::all();
+        return view('bangunan.edit', compact('bangunan', 'tanahs'));
+    }
+
+    public function update(Request $request, Bangunan $bangunan)
     {
         $request->validate([
             'nama_bangunan' => 'required',
             'kode_bangunan' => 'required',
-            'tanah_id'      => 'required',
+            'tanah_id'      => 'required|exists:tanahs,id',
         ]);
 
-        Bangunan::create([
-            'nama_bangunan' => $request->nama_bangunan,
-            'kode_bangunan' => $request->kode_bangunan,
-            'tanah_id'      => $request->tanah_id,
-        ]);
+        $bangunan->update($request->all());
 
-        return redirect()->route('bangunan.index')->with('success', 'Data Berhasil Ditambah!');
+        return redirect()->route('bangunan.index')
+            ->with('success', 'Bangunan berhasil diperbarui');
     }
 
-    /**
-     * Form edit bangunan.
-     */
-    public function edit(string $id)
+    public function destroy(Bangunan $bangunan)
     {
-        $bangunan = Bangunan::findOrFail($id);
-        $tanah = Tanah::all();
-        return view('bangunan.edit', compact('bangunan', 'tanah'));
-    }
+        $bangunan->delete();
 
-    /**
-     * Update data bangunan.
-     */
-    public function update(Request $request, string $id)
-    {
-        $request->validate([
-            'nama_bangunan' => 'required',
-            'kode_bangunan' => 'required',
-            'tanah_id'      => 'required',
-        ]);
-
-        $bangunan = Bangunan::findOrFail($id);
-
-        $bangunan->update([
-            'nama_bangunan' => $request->nama_bangunan,
-            'kode_bangunan' => $request->kode_bangunan,
-            'tanah_id'      => $request->tanah_id,
-        ]);
-
-        return redirect()->route('bangunan.index')->with('success', 'Data Berhasil Diupdate!');
-    }
-
-    /**
-     * Hapus data bangunan.
-     */
-    public function destroy(string $id)
-    {
-        Bangunan::destroy($id);
-        return redirect()->route('bangunan.index')->with('success', 'Data Berhasil Dihapus!');
+        return redirect()->route('bangunan.index')
+            ->with('success', 'Bangunan berhasil dihapus');
     }
 }

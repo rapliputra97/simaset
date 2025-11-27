@@ -13,15 +13,13 @@
             <th>Aksi</th>
         </tr>
     </thead>
-
     <tbody>
-        @foreach ($data as $item)
+        @foreach ($kategori as $item)
         <tr>
             <td>{{ $loop->iteration }}</td>
             <td>{{ $item->nama }}</td>
             <td>
                 <a href="{{ route('kategori.edit', $item->id) }}" class="btn btn-warning btn-sm">Edit</a>
-
                 <form action="{{ route('kategori.destroy', $item->id) }}" method="POST" style="display:inline-block;">
                     @csrf
                     @method('DELETE')

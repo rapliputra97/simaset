@@ -2,77 +2,56 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tanah;
 use Illuminate\Http\Request;
-use App\Models\Tanah; // ⬅️ penting! import model
 
 class TanahController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        // daftar tanah
         $tanahs = Tanah::all();
         return view('tanah.index', compact('tanahs'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('tanah.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
+        $request->validate([
+            'nama_tanah' => 'required',
+            'kode_tanah' => 'required|unique:tanahs,kode_tanah',
+            'alamat' => 'required',
+            'luas' => 'required|numeric'
+        ]);
+
         Tanah::create($request->all());
-        return redirect()->route('tanah.index');
+        return redirect()->route('tanah.index')->with('success', 'Tanah berhasil ditambahkan');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(Tanah $tanah)
     {
-        // ⬅️ LANGKAH 5 (Menampilkan relasi)
-        $tanah = Tanah::with('bangunans')->findOrFail($id);
-
-        return view('tanah.show', compact('tanah'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        $tanah = Tanah::findOrFail($id);
         return view('tanah.edit', compact('tanah'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Tanah $tanah)
     {
-        $tanah = Tanah::findOrFail($id);
-        $tanah->update($request->all());
+        $request->validate([
+            'nama_tanah' => 'required',
+            'kode_tanah' => 'required|unique:tanahs,kode_tanah,' . $tanah->id,
+            'alamat' => 'required',
+            'luas' => 'required|numeric'
+        ]);
 
-        return redirect()->route('tanah.index');
+        $tanah->update($request->all());
+        return redirect()->route('tanah.index')->with('success', 'Tanah berhasil diupdate');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Tanah $tanah)
     {
-        $tanah = Tanah::findOrFail($id);
         $tanah->delete();
-
-        return redirect()->route('tanah.index');
+        return redirect()->route('tanah.index')->with('success', 'Tanah berhasil dihapus');
     }
 }

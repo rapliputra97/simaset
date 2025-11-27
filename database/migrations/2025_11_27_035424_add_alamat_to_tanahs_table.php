@@ -11,15 +11,16 @@ return new class extends Migration
      */
    public function up()
 {
-    Schema::table('kategoris', function (Blueprint $table) {
-        $table->string('nama')->after('id'); // menambahkan kolom 'nama'
+    Schema::table('tanahs', function (Blueprint $table) {
+        $table->string('alamat')->after('no_sertifikat');
     });
 }
 
 public function down()
 {
-    Schema::table('kategoris', function (Blueprint $table) {
-        $table->dropColumn('nama');
+    Schema::table('tanahs', function (Blueprint $table) {
+        $table->dropColumn('alamat');
     });
 }
+
 };

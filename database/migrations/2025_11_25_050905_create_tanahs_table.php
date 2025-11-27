@@ -11,9 +11,11 @@ return new class extends Migration
         Schema::create('tanahs', function (Blueprint $table) {
             $table->id();
             $table->string('nama_tanah');
-            $table->string('kode_tanah');
-            $table->string('luas');
-            $table->string('no_sertifikat');
+            $table->string('kode_tanah')->unique();
+            $table->string('no_sertifikat')->nullable();
+            $table->string('alamat');
+            $table->float('luas');
+            $table->string('status')->default('tersedia');
             $table->timestamps();
         });
     }

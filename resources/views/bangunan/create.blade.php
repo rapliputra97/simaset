@@ -1,41 +1,39 @@
-@extends('layout')
+@extends('layouts.app')
 
 @section('content')
 <div class="container">
-    <h2>Tambah Bangunan</h2>
 
-    <form action="{{ route('bangunan.store') }}" method="POST">
-        @csrf
+    <div class="card p-4 shadow-sm border-success">
+        <h3 class="text-success mb-3">Tambah Bangunan</h3>
 
-        <!-- Nama Bangunan -->
-        <div class="mb-3">
-            <label>Nama Bangunan</label>
-            <input type="text" name="nama_bangunan" class="form-control" required>
-        </div>
+        <form action="{{ route('bangunan.store') }}" method="POST">
+            @csrf
 
-        <!-- Kode Bangunan -->
-        <div class="mb-3">
-            <label>Kode Bangunan</label>
-            <input type="text" name="kode_bangunan" class="form-control" required>
-        </div>
+            <div class="mb-3">
+                <label>Nama Bangunan</label>
+                <input type="text" name="nama_bangunan" class="form-control border-success" required>
+            </div>
 
-        <!-- DROPDOWN TANAH -->
-        <div class="mb-3">
-            <label>Pilih Tanah</label>
-            <select name="tanah_id" class="form-control" required>
-                <option value="">-- Pilih Tanah --</option>
+            <div class="mb-3">
+                <label>Kode Bangunan</label>
+                <input type="text" name="kode_bangunan" class="form-control border-success" required>
+            </div>
 
-                @foreach ($tanah as $t)
-                    <option value="{{ $t->id }}">
-                        {{ $t->nama_tanah }}
-                    </option>
-                @endforeach
+            <div class="mb-3">
+                <label>Pilih Tanah</label>
+                <select name="tanah_id" class="form-select border-success" required>
+    <option value="">-- Pilih Tanah --</option>
+    @foreach ($tanahs as $t)
+        <option value="{{ $t->id }}">{{ $t->nama_tanah }}</option>
+    @endforeach
+</select>
 
-            </select>
-        </div>
+            </div>
 
-        <button type="submit" class="btn btn-primary">Simpan</button>
+            <button class="btn btn-success">Simpan</button>
+            <a href="{{ route('bangunan.index') }}" class="btn btn-secondary">Kembali</a>
+        </form>
+    </div>
 
-    </form>
 </div>
 @endsection
