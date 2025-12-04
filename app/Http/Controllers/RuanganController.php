@@ -2,63 +2,47 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ruangan;
+use App\Models\Bangunan;
 use Illuminate\Http\Request;
 
 class RuanganController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+    public function index() {
+        $ruangans = Ruangan::with('bangunan')->get();
+        return view('ruangan.index', compact('ruangans'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    public function create() {
+        $bangunans = Bangunan::all();
+        return view('ruangan.create', compact('bangunans'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+    public function store(Request $request) {
+        $request->validate([
+            'nama_ruangan' => 'required',
+            'bangunan_id' => 'required|exists:bangunans,id'
+        ]);
+        Ruangan::create($request->all());
+        return redirect()->route('ruangan.index')->with('success', 'Ruangan berhasil ditambahkan!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+    public function edit(Ruangan $ruangan) {
+        $bangunans = Bangunan::all();
+        return view('ruangan.edit', compact('ruangan','bangunans'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+    public function update(Request $request, Ruangan $ruangan) {
+        $request->validate([
+            'nama_ruangan' => 'required',
+            'bangunan_id' => 'required|exists:bangunans,id'
+        ]);
+        $ruangan->update($request->all());
+        return redirect()->route('ruangan.index')->with('success', 'Ruangan berhasil diupdate!');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+    public function destroy(Ruangan $ruangan) {
+        $ruangan->delete();
+        return redirect()->route('ruangan.index')->with('success', 'Ruangan berhasil dihapus!');
     }
 }

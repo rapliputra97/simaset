@@ -8,12 +8,13 @@ class Tanah extends Model
 {
     protected $fillable = [
     'nama_tanah',
-    'kode_tanah',
-    'no_sertifikat',
     'alamat',
     'luas',
-    'status'
+    'status',
+    'kode_tanah',
+    'no_sertifikat'
 ];
+
 
 
     public function bangunan()

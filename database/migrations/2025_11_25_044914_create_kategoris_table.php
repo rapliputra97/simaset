@@ -9,17 +9,14 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-   public function up()
-{
-    Schema::table('kategoris', function (Blueprint $table) {
-        $table->string('nama')->after('id'); // menambahkan kolom 'nama'
-    });
-}
+    public function up(): void
+    {
+Schema::create('kategoris', function (Blueprint $table) {
+    $table->id();
+    $table->string('nama_kategori');
+    $table->timestamps();
+});
 
-public function down()
-{
-    Schema::table('kategoris', function (Blueprint $table) {
-        $table->dropColumn('nama');
-    });
-}
-};
+    
+        }
+    };

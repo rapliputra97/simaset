@@ -2,70 +2,54 @@
 
 @section('content')
 <div class="container">
+    <h2 class="mb-4">Daftar Bangunan</h2>
+    <a href="{{ route('bangunan.create') }}" class="btn btn-success mb-3">
+        <i class="bi bi-plus-circle"></i> Tambah Bangunan
+    </a>
 
-    <div class="card p-4 shadow-sm border-success">
-        <h3 class="text-success mb-3">Data Bangunan</h3>
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
 
-        {{-- Filter Tanah --}}
-        <form method="GET" class="row g-3 mb-3">
-            <div class="col-md-4">
-                <select name="tanah_id" class="form-select border-success">
-                    <option value="">-- Filter Berdasarkan Tanah --</option>
-                    @foreach ($tanahs as $tanah)
-                        <option value="{{ $tanah->id }}"
-                            {{ request('tanah_id') == $tanah->id ? 'selected' : '' }}>
-                            {{ $tanah->nama_tanah }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="col-md-2">
-                <button class="btn btn-success w-100">Filter</button>
-            </div>
-
-            <div class="col-md-2">
-                <a href="{{ route('bangunan.index') }}" class="btn btn-secondary w-100">Reset</a>
-            </div>
-        </form>
-
-        <a href="{{ route('bangunan.create') }}" class="btn btn-success mb-3">+ Tambah Bangunan</a>
-
-        <table class="table table-bordered">
-            <thead class="table-success">
-                <tr>
-                    <th>Nama Bangunan</th>
-                    <th>Kode</th>
-                    <th>Tanah</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-
-                @foreach ($bangunans as $b)
-                <tr>
-                    <td>{{ $b->nama_bangunan }}</td>
-                    <td>{{ $b->kode_bangunan }}</td>
-                    <td>{{ $b->tanah->nama_tanah }}</td>
-
-                    <td>
-                        <a href="{{ route('bangunan.edit', $b->id) }}"
-                           class="btn btn-warning btn-sm">Edit</a>
-
-                        <form action="{{ route('bangunan.destroy', $b->id) }}"
-                              method="POST" class="d-inline">
-                            @csrf @method('DELETE')
-                            <button class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Hapus Data Ini?')">Hapus</button>
-                        </form>
-                    </td>
-                </tr>
-                @endforeach
-
-            </tbody>
-        </table>
-
-    </div>
-
+    <table class="table table-hover table-striped table-bordered align-middle">
+        <thead class="table-primary">
+            <tr>
+                <th>No</th>
+                <th>Nama Bangunan</th>
+                <th>Kode</th>
+                <th>Tanah</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($bangunans as $index => $bangunan)
+            <tr>
+                <td>{{ $index + 1 }}</td>
+                <td>{{ $bangunan->nama_bangunan }}</td>
+                <td>{{ $bangunan->kode_bangunan }}</td>
+                <td>{{ $bangunan->tanah->nama_tanah }}</td>
+                <td>
+                    <a href="{{ route('bangunan.show', $bangunan->id) }}" class="btn btn-info btn-sm">
+                        <i class="bi bi-eye"></i> Detail
+                    </a>
+                    <a href="{{ route('bangunan.edit', $bangunan->id) }}" class="btn btn-warning btn-sm">
+                        <i class="bi bi-pencil-square"></i> Edit
+                    </a>
+                    <form action="{{ route('bangunan.destroy', $bangunan->id) }}" method="POST" style="display:inline-block;">
+                        @csrf
+                        @method('DELETE')
+                        <button onclick="return confirm('Yakin mau hapus?')" class="btn btn-danger btn-sm">
+                            <i class="bi bi-trash"></i> Hapus
+                        </button>
+                    </form>
+                </td>
+                
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
 </div>
 @endsection

@@ -6,16 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ruangan extends Model
 {
-    protected $fillable = [
-        'bangunan_id',
-        'nama_ruangan',
-        'kode_ruangan',
-        'jenis_ruangan',
-        'luas',
-    ];
+    protected $fillable = ['nama_ruangan', 'bangunan_id'];
 
-    public function bangunan()
-    {
+    public function bangunan() {
         return $this->belongsTo(Bangunan::class);
     }
+
+    public function barangs() {
+        return $this->hasMany(Barang::class);
+    }
 }
+

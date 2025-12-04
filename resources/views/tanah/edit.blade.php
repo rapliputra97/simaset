@@ -4,43 +4,29 @@
 <div class="container">
     <h2>Edit Tanah</h2>
 
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
+        </div>
+    @endif
+
     <form action="{{ route('tanah.update', $tanah->id) }}" method="POST">
         @csrf
         @method('PUT')
-
-        <div class="form-group mb-3">
+        <div class="mb-3">
             <label>Nama Tanah</label>
-            <input type="text" name="nama_tanah" value="{{ $tanah->nama_tanah }}" class="form-control" required>
+            <input type="text" name="nama_tanah" class="form-control" value="{{ old('nama_tanah', $tanah->nama_tanah) }}">
         </div>
-
-        <div class="form-group mb-3">
+        <div class="mb-3">
             <label>Kode Tanah</label>
-            <input type="text" name="kode_tanah" value="{{ $tanah->kode_tanah }}" class="form-control" required>
+            <input type="text" name="kode_tanah" class="form-control" value="{{ old('kode_tanah', $tanah->kode_tanah) }}">
         </div>
-
-        <div class="form-group mb-3">
-            <label>No Sertifikat</label>
-            <input type="text" name="no_sertifikat" value="{{ $tanah->no_sertifikat }}" class="form-control" required>
-        </div>
-
-        <div class="form-group mb-3">
-            <label>Alamat</label>
-            <input type="text" name="alamat" value="{{ $tanah->alamat }}" class="form-control" required>
-        </div>
-
-        <div class="form-group mb-3">
-            <label>Luas</label>
-            <input type="number" name="luas" value="{{ $tanah->luas }}" class="form-control">
-        </div>
-
-        <div class="form-group mb-3">
+        <div class="mb-3">
             <label>Status</label>
-            <input type="text" name="status" value="{{ $tanah->status }}" class="form-control" required>
+            <input type="text" name="status" class="form-control" value="{{ old('status', $tanah->status) }}">
         </div>
-
-        <button class="btn btn-primary mt-3">Update</button>
-        <a href="{{ route('tanah.index') }}" class="btn btn-secondary mt-3">Kembali</a>
+        <button type="submit" class="btn btn-primary">Update</button>
+        <a href="{{ route('tanah.index') }}" class="btn btn-secondary">Batal</a>
     </form>
-
 </div>
 @endsection
